@@ -1,0 +1,4 @@
+#!/bin/bash
+
+tmux new -s $1 || tmux attach -t $1
+

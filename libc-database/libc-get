@@ -1,0 +1,15 @@
+#!/bin/bash
+cd "$(dirname "$0")"
+. common/libc.sh
+
+get_current_ubuntu xenial i386 libc6
+get_current_ubuntu xenial amd64 libc6
+get_current_ubuntu xenial amd64 libc6-i386
+
+get_current_ubuntu bionic i386 libc6
+get_current_ubuntu bionic amd64 libc6
+get_current_ubuntu bionic amd64 libc6-i386
+
+get_current_ubuntu disco i386 libc6
+get_current_ubuntu disco amd64 libc6
+get_current_ubuntu disco amd64 libc6-i386
