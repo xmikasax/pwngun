@@ -1,4 +1,4 @@
-FROM ubuntu:bionic
+FROM ubuntu:eoan
 
 RUN dpkg --add-architecture i386 \
     && apt-get -y update \

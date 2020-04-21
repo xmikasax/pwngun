@@ -69,9 +69,9 @@ get_ubuntu() {
   echo "  -> Location: $url"
   local id=`echo $url | perl -n -e '/(libc6[^\/]*)\./ && print $1'`
   echo "  -> ID: $id"
-  check_id $id || return
+  check_id $id || return 0
   echo "  -> Downloading package"
-  wget "$url" 2>/dev/null -O $tmp/pkg.deb || die "Failed to download package from $url"
+  wget --connect-timeout 30 -t 1 "$url" -O $tmp/pkg.deb 2>/dev/null || return 1
   echo "  -> Extracting package"
   pushd $tmp 1>/dev/null
   ar x pkg.deb || die "ar failed"
@@ -79,23 +79,42 @@ get_ubuntu() {
   popd 1>/dev/null
   suffix=
   cnt=1
-  for libc in $(find $tmp -name libc.so.6 || die "Cannot locate libc.so.6"); do
+  for libc in $(find $tmp -name libc.so.6 || return 1); do
     process_libc $libc $id$suffix $info $url
     cnt=$((cnt+1))
     suffix=_$cnt
   done
   rm -rf $tmp
+  return 0
 }
 
-get_current_ubuntu() {
+get_current_debian_like() {
   local version=$1
   local arch=$2
   local pkg=$3
-  local info=ubuntu-$version-$arch-$pkg
-  echo "Getting package location for ubuntu-$version-$arch"
-  local url=`(wget http://packages.ubuntu.com/$version/$arch/$pkg/download -O - 2>/dev/null \
-               | grep -oh 'http://[^"]*libc6[^"]*.deb') || die "Failed to get package version"`
-  get_ubuntu $url $info
+  local distro=$4
+  local website=$5
+  local info=$distro-$version-$arch-$pkg
+  echo "Getting package $pkg location for $distro-$version-$arch"
+  local urls=""
+  mirrors_url="$website/$version/$arch/$pkg/download"
+  echo $mirrors_url
+  for i in $(seq 1 3); do
+    urls=`(wget $mirrors_url -O - 2>/dev/null \
+           | grep -oh 'http://[^"]*libc6[^"]*.deb')`
+    for url in $urls
+    do
+        get_ubuntu $url $info && return 0
+        echo "Failed, trying next url"
+    done
+    sleep 1
+  done
+  echo "urls: $urls"
+  die "Failed to get package version"
+}
+
+get_current_ubuntu() {
+  get_current_debian_like "$@" "ubuntu" "http://packages.ubuntu.com"
 }
 
 get_all_ubuntu() {
@@ -104,6 +123,12 @@ get_all_ubuntu() {
   for f in `wget $url/ -O - 2>/dev/null | egrep -oh 'libc6(-i386|-amd64)?_[^"]*(amd64|i386)\.deb' |grep -v "</a>"`; do
     get_ubuntu $url/$f $1
   done
+}
+
+# ===== Debian ===== #
+
+get_current_debian() {
+  get_current_debian_like "$@" "debian" "https://packages.debian.org"
 }
 
 # ===== Local ===== #
