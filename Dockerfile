@@ -53,7 +53,7 @@ RUN apt-get -y install ruby \
 ADD libc-database /libc-database
 RUN /libc-database/libc-get
 
-RUN pip install --upgrade git+https://github.com/Gallopsled/pwntools.git@dev
+RUN pip3 install --upgrade git+https://github.com/Gallopsled/pwntools.git@dev
 RUN mkdir -p ~/.pwntools-cache \
     && echo never > ~/.pwntools-cache/update
 
