@@ -50,12 +50,11 @@ RUN git clone https://github.com/radareorg/radare2.git \
 RUN apt-get -y install ruby \
     && gem install one_gadget
 
-ADD libc-database /libc-database
-RUN /libc-database/libc-get
-
 RUN pip3 install --upgrade git+https://github.com/Gallopsled/pwntools.git@dev
 RUN mkdir -p ~/.pwntools-cache \
     && echo never > ~/.pwntools-cache/update
+
+RUN pip3 install --upgrade git+https://github.com/xmikasax/pwngun_craft
 
 RUN sh -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)" \
     && sed -ir 's/plugins=(git)/plugins=(git tmux zsh-completions zsh-autosuggestions zsh-syntax-highlighting history pip)/g' ~/.zshrc \
@@ -67,4 +66,11 @@ RUN sh -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/too
     && chsh -s $(which zsh)
 
 RUN rm -rf /builds
-ADD craft_sploit.py sploit.py spl newa /aux/
+
+WORKDIR /
+
+RUN git clone https://github.com/xmikasax/libc-database.git
+
+RUN /libc-database/libc-get
+
+ADD sploit.py spl newa /aux/

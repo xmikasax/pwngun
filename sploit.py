@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from craft_sploit import craft
+from pwngun_craft import craft
 from pwn import *
 
 # SETTINGS
