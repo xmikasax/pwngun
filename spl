@@ -1,4 +1,3 @@
 #!/bin/bash
 
 cp /aux/sploit.py ./$1
-cp /aux/craft_sploit.py ./$1
