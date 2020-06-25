@@ -2,7 +2,7 @@ FROM ubuntu:eoan
 
 RUN dpkg --add-architecture i386 \
     && apt-get -y update \
-    && apt-get -y install libc6:i386 libncurses5:i386 libstdc++6:i386 gcc-multilib g++-multilib
+    && apt-get -y install libc6-dbg libc6-dbg:i386 libc6:i386 libncurses5:i386 libstdc++6:i386 gcc-multilib g++-multilib
 
 RUN apt-get -y install wget curl git autoconf automake libtool make unzip cmake texinfo patchelf strace ltrace zsh tmux tree nano netcat
 
@@ -42,6 +42,9 @@ RUN git clone https://github.com/keystone-engine/keystone.git \
     && ldconfig
 
 RUN pip3 install keystone-engine
+
+ADD gef_pwngun.py /root/.gef_pwngun.py
+RUN echo source /root/.gef_pwngun.py >> /root/.gdbinit
 
 RUN git clone https://github.com/radareorg/radare2.git \
     && cd radare2 \
