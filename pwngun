@@ -3,9 +3,19 @@
 set -e
 docker ps > /dev/null
 
-if [ "$(docker ps -a | grep pwngun)" ]
+if [ -z $1 ]
 then
-    docker exec -it pwngun /bin/zsh
+    if [ "$(docker ps -a | grep pwngun)" ]
+    then
+        docker exec -it pwngun /bin/zsh
+    else
+        docker run -v ~/ctf:/osx -w /osx --env LANG=C.UTF-8 --env LC_ALL=C.UTF-8 --security-opt seccomp=unconfined --privileged --name pwngun -it --rm -h fl3x fl3x3dd/pwngun:latest /bin/zsh
+    fi
 else
-    docker run -v ~/ctf:/osx -w /osx --env LANG=C.UTF-8 --env LC_ALL=C.UTF-8 --security-opt seccomp=unconfined --privileged --name pwngun -it --rm -h fl3x fl3x3dd/pwngun:latest /bin/zsh
+    if [ "$(docker ps -a | grep pwngun)" ]
+    then
+        docker exec -it pwngun /bin/zsh
+    else
+        docker run -v ~/ctf:/osx -w /osx --env LANG=C.UTF-8 --env LC_ALL=C.UTF-8 --security-opt seccomp=unconfined --privileged --name pwngun -it --rm -h fl3x fl3x3dd/pwngun:$1 /bin/zsh
+    fi
 fi

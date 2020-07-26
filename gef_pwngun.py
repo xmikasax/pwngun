@@ -1,3 +1,4 @@
+@register_command
 class FileInspect(GenericCommand):
     """Inspect _IO_FILE_plus structure."""
     _cmdline_ = "fi"
@@ -18,4 +19,7 @@ class FileInspect(GenericCommand):
         gdb.execute("p *(struct _IO_FILE_plus*) {:d}".format(address))
         return
 
-register_external_command(FileInspect())
+if __name__ == "__main__":
+    gdb.execute("alias dt=pcustom")
+    gdb.execute("gef config pcustom.struct_path /structs")
+    gdb.execute("gef save")

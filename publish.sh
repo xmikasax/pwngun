@@ -1,3 +1,12 @@
 #!/bin/bash
 
-docker push fl3x3dd/pwngun:latest
+set -e
+
+docker push fl3x3dd/pwngun:$PWNGUN_VERSION
+
+if [ "$PWNGUN_VERSION" == "2.30" ]
+then
+    docker tag fl3x3dd/pwngun:$PWNGUN_VERSION fl3x3dd/pwngun:latest
+else
+    docker push fl3x3dd/pwngun:latest
+fi

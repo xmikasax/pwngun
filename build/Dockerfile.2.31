@@ -1,4 +1,7 @@
-FROM ubuntu:eoan
+FROM ubuntu:focal
+
+ENV TZ=Europe/Moscow
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 RUN dpkg --add-architecture i386 \
     && apt-get -y update \
@@ -30,7 +33,12 @@ RUN wget https://ftp.gnu.org/gnu/gdb/gdb-9.1.tar.xz \
     && make -j 4 \
     && make -C gdb install
 
-RUN wget -q -O- https://github.com/hugsy/gef/raw/dev/scripts/gef.sh | sh
+RUN mkdir -p /structs
+
+
+
+RUN wget -q -O "$HOME/.gdbinit-gef.py" https://raw.githubusercontent.com/hugsy/gef/dev/gef.py
+RUN echo "source $HOME/.gdbinit-gef.py" > "$HOME/.gdbinit"
 RUN pip3 install ropper unicorn
 
 RUN git clone https://github.com/keystone-engine/keystone.git \
