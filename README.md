@@ -1,5 +1,6 @@
 # pwngun
 Docker environment for pwning
+[![Build Status](https://travis-ci.com/xmikasax/pwngun.svg?branch=master)](https://travis-ci.com/xmikasax/pwngun)
 
 * `spl` - put sploit template script in currect directory
 * `libc-identify $LIBC_PATH` - find libc by hash
