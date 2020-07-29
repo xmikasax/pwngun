@@ -16,6 +16,5 @@ Where to get it
 * `docker pull fl3x3dd/pwngun:latest`
 * `docker pull fl3x3dd/pwngun:2.23`
 * `docker pull fl3x3dd/pwngun:2.27`
-* `docker pull fl3x3dd/pwngun:2.29`
 * `docker pull fl3x3dd/pwngun:2.30`
 * `docker pull fl3x3dd/pwngun:2.31`
